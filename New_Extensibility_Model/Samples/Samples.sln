@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OutputWindowSample", "Outpu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandParentingSample", "CommandParentingSample\CommandParentingSample.csproj", "{30A57F3B-B2DC-414D-A37B-2A4ECB819D4B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PluginDeployment", "PluginDeployment\PluginDeployment.csproj", "{A1B2C3D4-E5F6-4789-ABCD-EF0123456789}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DialogSample", "DialogSample\DialogSample.csproj", "{563DFF27-B946-40A3-9EB2-F3B8CCFE4F0A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InsertGuid", "InsertGuid\InsertGuid.csproj", "{E9A9549D-5F36-4C82-86A5-824A538B8E51}"
