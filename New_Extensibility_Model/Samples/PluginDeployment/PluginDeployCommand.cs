@@ -103,19 +103,19 @@ internal class PluginDeployCommand : Command
     /// <inheritdoc />
     public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
     {
-        // 显示提示消息"插件发布中" - 使用本地化字符串资源
-        // Display progress message "Plugin is being released" - using localized string resources
+        // 显示提示消息"插件发布中" - 直接使用中文文本
+        // Display progress message "Plugin is being released" - using direct Chinese text
         // 
         // ShowPromptAsync 方法的功能：
         // ShowPromptAsync method functionality:
         // - 在 Visual Studio 中显示模态对话框
         //   Display modal dialog in Visual Studio
-        // - 支持本地化消息（通过 %key% 语法引用字符串资源）
-        //   Support localized messages (reference string resources via %key% syntax)
+        // - 使用直接字符串而不是本地化资源引用
+        //   Use direct strings instead of localized resource references
         // - 提供用户交互选项（这里使用 PromptOptions.OK 只显示确定按钮）
         //   Provide user interaction options (here using PromptOptions.OK to show only OK button)
         await this.Extensibility.Shell().ShowPromptAsync(
-            "%PluginDeployment.PluginDeployCommand.ProgressMessage%", // 引用本地化字符串 (Reference localized string)
+            "插件发布中", // 直接使用中文文本 (Direct Chinese text)
             PromptOptions.OK, // 仅显示确定按钮 (Show only OK button)
             cancellationToken); // 传入取消令牌以支持操作取消 (Pass cancellation token to support operation cancellation)
         
