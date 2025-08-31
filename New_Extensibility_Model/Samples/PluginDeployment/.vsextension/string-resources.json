@@ -1,0 +1,31 @@
+﻿{
+  // 本地化字符串资源文件 (Localized String Resources File)
+  // 
+  // 这个文件定义了扩展中使用的所有用户可见文本的中文版本
+  // This file defines Chinese versions of all user-visible text used in the extension
+  //
+  // 键值对说明 (Key-Value Pair Explanations):
+  // 
+  // 1. DisplayName: 在右键菜单中显示的命令名称
+  //    DisplayName: Command name displayed in right-click menu
+  "PluginDeployment.PluginDeployCommand.DisplayName": "插件发布",
+  
+  // 2. ProgressMessage: 用户点击命令后显示的进度消息
+  //    ProgressMessage: Progress message displayed after user clicks the command  
+  "PluginDeployment.PluginDeployCommand.ProgressMessage": "插件发布中"
+  
+  // 注意事项 (Notes):
+  // - 键名必须与代码中使用的字符串引用完全匹配
+  //   Key names must exactly match string references used in code
+  // - 使用 %key% 语法在代码中引用这些字符串
+  //   Use %key% syntax to reference these strings in code
+  // - 支持添加更多语言版本的资源文件
+  //   Support for adding resource files for more language versions
+  //
+  // 扩展示例 (Extension Examples):
+  // 如果需要添加更多文本，可以按以下格式添加：
+  // If you need to add more text, you can add it in the following format:
+  // "PluginDeployment.Command.SuccessMessage": "插件发布成功！",
+  // "PluginDeployment.Command.ErrorMessage": "插件发布失败，请重试。",
+  // "PluginDeployment.Command.ConfirmMessage": "确定要发布此插件吗？"
+}
