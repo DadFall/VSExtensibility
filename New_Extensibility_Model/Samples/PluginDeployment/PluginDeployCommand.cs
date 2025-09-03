@@ -5,6 +5,8 @@ namespace PluginDeployment;
 
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
@@ -118,7 +120,7 @@ internal class PluginDeployCommand : Command
             "插件发布中", // 直接使用中文文本 (Direct Chinese text)
             PromptOptions.OK, // 仅显示确定按钮 (Show only OK button)
             cancellationToken); // 传入取消令牌以支持操作取消 (Pass cancellation token to support operation cancellation)
-        
+
         // 在这里可以添加实际的插件发布逻辑
         // Actual plugin deployment logic can be added here
         // 例如：

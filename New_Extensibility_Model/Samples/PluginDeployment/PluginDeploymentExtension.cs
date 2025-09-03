@@ -73,7 +73,7 @@ public class PluginDeploymentExtension : Extension
         // 调用基类的服务初始化方法，确保扩展的基础服务正确设置
         // Call the base class service initialization method to ensure basic extension services are properly set up
         base.InitializeServices(serviceCollection);
-        
+
         // 在这里可以添加额外的服务注册
         // Additional service registrations can be added here
         // 例如：serviceCollection.AddSingleton<IMyService, MyService>();
