@@ -63,7 +63,17 @@ PluginDeployment/
 - 新扩展性模型（Non‑VSIX）
 
 ## 贡献
-- 欢迎通过 Issues 与 Pull Requests 参与贡献
+1. **Fork 本项目**：从 GitHub 上 fork 本项目并进行修改。
+2. **提交 PR**：提交 pull request 以贡献代码或修复 bug。
+3. **报告问题**：在 Issues 页面提交 bug 或建议。
+
+## 联系方式
+
+如果你有任何问题或建议，请通过以下方式联系：
+
+- **邮件**：[your-email@example.com]
+- **GitHub**：[https://github.com/yourusername/PluginPublisher](https://github.com/yourusername/PluginPublisher)
 
 ## 许可证
-- 本项目使用 MIT 许可证，详见 LICENSE
+
+此项目使用 MIT 许可证。详情请参阅 LICENSE 文件。
