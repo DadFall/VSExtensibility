@@ -71,8 +71,8 @@ PluginDeployment/
 
 如果你有任何问题或建议，请通过以下方式联系：
 
-- **邮件**：[your-email@example.com]
-- **GitHub**：[https://github.com/yourusername/PluginPublisher](https://github.com/yourusername/PluginPublisher)
+- **邮件**：[99472773+DadFall@users.noreply.github.com]
+- **GitHub**：[https://github.com/DadFall/PluginPublisher](https://github.com/DadFall/PluginPublisher)
 
 ## 许可证
 
