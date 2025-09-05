@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Extensibility.Sdk" Version="17.14.40254" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudio.Extensibility.Build" Version="17.14.40254" PrivateAssets="all" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="EnvironmentSelectionDialog.xaml" />
+    <Page Remove="EnvironmentSelectionDialog.xaml" />
+  </ItemGroup>
 </Project>

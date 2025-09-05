@@ -159,145 +159,24 @@ internal class PluginDeployCommand : Command
 
         try
         {
-            // 第一步：环境选择 (Step 1: Environment Selection)
-            CrmEnvironmentType selectedEnvironment = await shell.ShowPromptAsync(
-                "请选择目标环境类型：",
-                new PromptOptions<CrmEnvironmentType>
-                {
-                    Choices =
-                    {
-                        { "On-Premise (本地部署)", CrmEnvironmentType.OnPremise },
-                        { "Dataverse (云端环境)", CrmEnvironmentType.Dataverse },
-                    },
-                    DismissedReturns = CrmEnvironmentType.OnPremise,
-                    Title = DialogTitle,
-                    Icon = ImageMoniker.KnownValues.Settings,
-                },
-                cancellationToken);
+            // 显示环境选择对话框 (Show Environment Selection Dialog)
+            #pragma warning disable CA2000 // Dispose objects before losing scope
+            var environmentDialog = new EnvironmentSelectionDialog();
+            #pragma warning restore CA2000 // Dispose objects before losing scope
 
-            // 第二步：根据环境选择认证方式 (Step 2: Authentication Method Selection based on Environment)
-            AuthenticationMethod selectedAuth;
-            if (selectedEnvironment == CrmEnvironmentType.OnPremise)
+            await shell.ShowDialogAsync(environmentDialog, cancellationToken);
+
+            // 获取对话框结果 (Get Dialog Result)
+            var selectedEnvironment = await environmentDialog.GetResultAsync();
+
+            if (selectedEnvironment == null)
             {
-                selectedAuth = await shell.ShowPromptAsync(
-                    "请选择 On-Premise 环境的认证方式：",
-                    new PromptOptions<AuthenticationMethod>
-                    {
-                        Choices =
-                        {
-                            { "Active Directory", AuthenticationMethod.ActiveDirectory },
-                            { "IFD (Internet Facing Deployment)", AuthenticationMethod.IFD },
-                            { "连接字符串", AuthenticationMethod.ConnectionString },
-                        },
-                        DismissedReturns = AuthenticationMethod.ActiveDirectory,
-                        Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.StatusSecurityWarning,
-                    },
-                    cancellationToken);
-            }
-            else // Dataverse
-            {
-                selectedAuth = await shell.ShowPromptAsync(
-                    "请选择 Dataverse 环境的认证方式：",
-                    new PromptOptions<AuthenticationMethod>
-                    {
-                        Choices =
-                        {
-                            { "OAuth", AuthenticationMethod.OAuth },
-                            { "连接字符串", AuthenticationMethod.ConnectionString },
-                        },
-                        DismissedReturns = AuthenticationMethod.OAuth,
-                        Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.StatusSecurityWarning,
-                    },
-                    cancellationToken);
-            }
-
-            // 第三步：获取连接详细信息 (Step 3: Get Connection Details)
-            string? connectionDetails = null;
-            if (selectedAuth == AuthenticationMethod.ConnectionString)
-            {
-                connectionDetails = await shell.ShowPromptAsync(
-                    "请输入连接字符串：",
-                    InputPromptOptions.Default with 
-                    { 
-                        Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.Database,
-                    },
-                    cancellationToken);
-
-                if (string.IsNullOrEmpty(connectionDetails))
-                {
-                    await shell.ShowPromptAsync(
-                        "连接字符串不能为空，发布过程已取消。",
-                        PromptOptions.ErrorConfirm with { Title = DialogTitle },
-                        cancellationToken);
-                    return;
-                }
-            }
-            else if (selectedAuth == AuthenticationMethod.OAuth && selectedEnvironment == CrmEnvironmentType.Dataverse)
-            {
-                connectionDetails = await shell.ShowPromptAsync(
-                    "请输入 Dataverse 环境 URL（例如：https://yourorg.crm.dynamics.com）：",
-                    InputPromptOptions.Default with 
-                    { 
-                        Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.Cloud,
-                    },
-                    cancellationToken);
-
-                if (string.IsNullOrEmpty(connectionDetails))
-                {
-                    await shell.ShowPromptAsync(
-                        "环境 URL 不能为空，发布过程已取消。",
-                        PromptOptions.ErrorConfirm with { Title = DialogTitle },
-                        cancellationToken);
-                    return;
-                }
-            }
-
-            // 第四步：确认配置 (Step 4: Confirm Configuration)
-            string configSummary = $"环境类型：{(selectedEnvironment == CrmEnvironmentType.OnPremise ? "On-Premise" : "Dataverse")}\n" +
-                                 $"认证方式：{GetAuthMethodDisplayName(selectedAuth)}\n" +
-                                 $"连接信息：{(string.IsNullOrEmpty(connectionDetails) ? "使用默认配置" : "已配置")}";
-
-            bool confirmDeployment = await shell.ShowPromptAsync(
-                $"确认发布配置：\n\n{configSummary}\n\n确定要继续发布插件吗？",
-                PromptOptions.OKCancel with
-                {
-                    Title = DialogTitle,
-                    Icon = ImageMoniker.KnownValues.StatusInformation,
-                },
-                cancellationToken);
-
-            if (!confirmDeployment)
-            {
-                await shell.ShowPromptAsync(
-                    "插件发布已取消。",
-                    PromptOptions.AlertConfirm with { Title = DialogTitle },
-                    cancellationToken);
+                // 用户取消了操作 (User cancelled the operation)
                 return;
             }
 
-            // 第五步：执行发布 (Step 5: Execute Deployment)
-            await shell.ShowPromptAsync(
-                $"正在发布插件到 {(selectedEnvironment == CrmEnvironmentType.OnPremise ? "On-Premise" : "Dataverse")} 环境...\n\n" +
-                "发布完成！插件已成功部署。",
-                PromptOptions.AlertConfirm with { Title = DialogTitle },
-                cancellationToken);
-
-            // 在这里可以添加实际的插件发布逻辑
-            // Actual plugin deployment logic can be added here
-            // 例如：
-            // For example:
-            // - 根据 selectedEnvironment 和 selectedAuth 建立连接
-            //   Establish connection based on selectedEnvironment and selectedAuth
-            // - 构建并打包插件程序集
-            //   Build and package plugin assembly
-            // - 上传到目标环境
-            //   Upload to target environment
-            // - 注册插件步骤和映像
-            //   Register plugin steps and images
+            // 继续后续的部署流程 (Continue with deployment process)
+            await ContinueDeploymentAsync(shell, selectedEnvironment, DialogTitle, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -306,6 +185,88 @@ internal class PluginDeployCommand : Command
                 PromptOptions.ErrorConfirm with { Title = DialogTitle },
                 cancellationToken);
         }
+    }
+
+    /// <summary>
+    /// 继续部署流程
+    /// Continue deployment process
+    /// </summary>
+    /// <param name="shell">Shell 扩展性 (Shell Extensibility)</param>
+    /// <param name="selectedEnvironment">选中的环境 (Selected Environment)</param>
+    /// <param name="dialogTitle">对话框标题 (Dialog Title)</param>
+    /// <param name="cancellationToken">取消令牌 (Cancellation Token)</param>
+    private async Task ContinueDeploymentAsync(
+        ShellExtensibility shell, 
+        CrmEnvironment selectedEnvironment, 
+        string dialogTitle, 
+        CancellationToken cancellationToken)
+    {
+        // 确认部署 (Confirm Deployment)
+        string configSummary = $"环境名称：{selectedEnvironment.Name}\n" +
+                              $"环境类型：{selectedEnvironment.TypeDisplay}\n" +
+                              $"环境 URL：{selectedEnvironment.Url}\n" +
+                              $"认证方式：{GetAuthMethodDisplayName(selectedEnvironment.AuthMethod)}";
+
+        bool confirmDeployment = await shell.ShowPromptAsync(
+            $"确认发布配置：\n\n{configSummary}\n\n确定要继续发布插件吗？",
+            PromptOptions.OKCancel with
+            {
+                Title = dialogTitle,
+                Icon = ImageMoniker.KnownValues.StatusInformation,
+            },
+            cancellationToken);
+
+        if (!confirmDeployment)
+        {
+            await shell.ShowPromptAsync(
+                "插件发布已取消。",
+                PromptOptions.AlertConfirm with { Title = dialogTitle },
+                cancellationToken);
+            return;
+        }
+
+        // 获取额外的连接信息（如果需要）
+        // Get additional connection details if needed
+        if (selectedEnvironment.AuthMethod == AuthenticationMethod.ConnectionString)
+        {
+            var connectionString = await shell.ShowPromptAsync(
+                "请输入连接字符串：",
+                InputPromptOptions.Default with 
+                { 
+                    Title = dialogTitle,
+                    Icon = ImageMoniker.KnownValues.Database,
+                },
+                cancellationToken);
+
+            if (string.IsNullOrEmpty(connectionString))
+            {
+                await shell.ShowPromptAsync(
+                    "连接字符串不能为空，发布过程已取消。",
+                    PromptOptions.ErrorConfirm with { Title = dialogTitle },
+                    cancellationToken);
+                return;
+            }
+        }
+
+        // 执行发布 (Execute Deployment)
+        await shell.ShowPromptAsync(
+            $"正在发布插件到环境 \"{selectedEnvironment.Name}\"...\n\n" +
+            "发布完成！插件已成功部署。",
+            PromptOptions.AlertConfirm with { Title = dialogTitle },
+            cancellationToken);
+
+        // 在这里可以添加实际的插件发布逻辑
+        // Actual plugin deployment logic can be added here
+        // 例如：
+        // For example:
+        // - 根据 selectedEnvironment 建立连接
+        //   Establish connection based on selectedEnvironment
+        // - 构建并打包插件程序集
+        //   Build and package plugin assembly
+        // - 上传到目标环境
+        //   Upload to target environment
+        // - 注册插件步骤和映像
+        //   Register plugin steps and images
     }
 
     /// <summary>
