@@ -672,7 +672,17 @@ public enum AuthenticationMethod
     /// <summary>
     /// 客户端凭据
     /// </summary>
-    ClientCredentials
+    ClientCredentials,
+
+    /// <summary>
+    /// 连接字符串 (Connection String)
+    /// </summary>
+    ConnectionString,
+
+    /// <summary>
+    /// IFD (Internet Facing Deployment，适用于 On-Premise)
+    /// </summary>
+    IFD
 }
 
 /// <summary>

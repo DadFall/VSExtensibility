@@ -32,55 +32,6 @@ using Microsoft.VisualStudio.Extensibility.Shell;
 /// - 通过 VSCT GUID 和 ID 来精确定位右键菜单
 ///   Uses VSCT GUID and ID to precisely locate right-click menu
 /// </summary>
-/// <summary>
-/// CRM 环境类型枚举 - 定义支持的环境类型
-/// CRM Environment Type Enumeration - defines supported environment types
-/// </summary>
-internal enum CrmEnvironmentType
-{
-    /// <summary>
-    /// On-Premise 环境 (本地部署环境)
-    /// On-Premise environment (local deployment environment)
-    /// </summary>
-    OnPremise,
-
-    /// <summary>
-    /// Dataverse 环境 (云端环境/Dynamics 365 在线版)
-    /// Dataverse environment (cloud environment/Dynamics 365 Online)
-    /// </summary>
-    Dataverse
-}
-
-/// <summary>
-/// 认证方式枚举 - 定义支持的认证方式
-/// Authentication Method Enumeration - defines supported authentication methods
-/// </summary>
-internal enum AuthenticationMethod
-{
-    /// <summary>
-    /// OAuth 认证 (适用于 Dataverse)
-    /// OAuth authentication (for Dataverse)
-    /// </summary>
-    OAuth,
-
-    /// <summary>
-    /// 连接字符串 (Connection String)
-    /// Connection String
-    /// </summary>
-    ConnectionString,
-
-    /// <summary>
-    /// Active Directory (适用于 On-Premise)
-    /// Active Directory (for On-Premise)
-    /// </summary>
-    ActiveDirectory,
-
-    /// <summary>
-    /// IFD (Internet Facing Deployment，适用于 On-Premise)
-    /// IFD (Internet Facing Deployment, for On-Premise)
-    /// </summary>
-    IFD
-}
 
 [VisualStudioContribution] // 标记为 Visual Studio 扩展贡献 (Mark as Visual Studio extension contribution)
 internal class PluginDeployCommand : Command
