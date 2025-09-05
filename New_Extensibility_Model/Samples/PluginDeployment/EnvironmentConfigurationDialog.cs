@@ -44,6 +44,10 @@ internal class EnvironmentConfigurationDialog : RemoteUserControl
         // 加载 XAML 资源
         // Load XAML resources
         this.ResourceDictionaries.AddEmbeddedResource("PluginDeployment.EnvironmentConfigurationDialog.xaml");
+        
+        // 设置 DataTemplate
+        // Set DataTemplate
+        this.DataTemplate = this.ResourceDictionaries[0]["EnvironmentConfigurationDialogTemplate"] as System.Windows.DataTemplate;
     }
 
     /// <summary>

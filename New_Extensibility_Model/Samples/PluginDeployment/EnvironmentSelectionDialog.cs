@@ -38,6 +38,10 @@ internal class EnvironmentSelectionDialog : RemoteUserControl
         // 加载 XAML 资源
         // Load XAML resources
         this.ResourceDictionaries.AddEmbeddedResource("PluginDeployment.EnvironmentSelectionDialog.xaml");
+        
+        // 设置 DataTemplate
+        // Set DataTemplate
+        this.DataTemplate = this.ResourceDictionaries[0]["EnvironmentSelectionDialogTemplate"] as System.Windows.DataTemplate;
     }
 
     /// <summary>
