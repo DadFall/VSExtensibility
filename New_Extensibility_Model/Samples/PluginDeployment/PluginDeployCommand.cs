@@ -191,7 +191,7 @@ internal class PluginDeployCommand : Command
                         },
                         DismissedReturns = AuthenticationMethod.ActiveDirectory,
                         Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.Security,
+                        Icon = ImageMoniker.KnownValues.StatusSecurityWarning,
                     },
                     cancellationToken);
             }
@@ -208,7 +208,7 @@ internal class PluginDeployCommand : Command
                         },
                         DismissedReturns = AuthenticationMethod.OAuth,
                         Title = DialogTitle,
-                        Icon = ImageMoniker.KnownValues.Security,
+                        Icon = ImageMoniker.KnownValues.StatusSecurityWarning,
                     },
                     cancellationToken);
             }
