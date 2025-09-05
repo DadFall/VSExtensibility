@@ -46,8 +46,8 @@ public class PluginDeploymentExtension : Extension
                 id: "PluginDeployment.d40c8971-86cd-5fg7-a4f9-26c0b65d0f3c", // 扩展的唯一 GUID 标识符 (Unique GUID identifier for the extension)
                 version: this.ExtensionAssemblyVersion, // 扩展版本，自动从程序集获取 (Extension version, automatically obtained from assembly)
                 publisherName: "Microsoft", // 发布者名称 (Publisher name)
-                displayName: "Plugin Deployment Extension", // 扩展显示名称 (Extension display name)
-                description: "Extension for deploying plugins from project items"), // 扩展描述 (Extension description)
+                displayName: "插件部署工具", // 扩展显示名称 (Extension display name)
+                description: "Dynamics 365 插件程序集和步骤的发布与部署"), // 扩展描述 (Extension description)
     };
 
     /// <summary>
