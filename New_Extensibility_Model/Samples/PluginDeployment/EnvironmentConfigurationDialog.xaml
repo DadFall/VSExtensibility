@@ -1,0 +1,180 @@
+﻿<DataTemplate xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vs="http://schemas.microsoft.com/visualstudio/extensibility/2022/xaml"
+              xmlns:styles="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
+              xmlns:colors="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0">
+  
+  <Grid Width="500" Height="550" Margin="16">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    
+    <!-- Title -->
+    <TextBlock Grid.Row="0" 
+               Text="{Binding Title}" 
+               FontSize="16" 
+               FontWeight="SemiBold" 
+               Margin="0,0,0,20"
+               Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+    
+    <!-- Configuration Form -->
+    <ScrollViewer Grid.Row="1" 
+                  VerticalScrollBarVisibility="Auto"
+                  Margin="0,0,0,20">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+          <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Name -->
+        <TextBlock Grid.Row="0" Text="名称 (Name):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        <TextBox Grid.Row="1" 
+                 Text="{Binding Environment.Name, UpdateSourceTrigger=PropertyChanged}"
+                 Height="26" Margin="0,0,0,12"
+                 Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                 Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                 BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+        
+        <!-- Deployment Type -->
+        <TextBlock Grid.Row="2" Text="部署类型 (Deployment Type):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,12">
+          <RadioButton Content="On-premises" 
+                       IsChecked="{Binding IsOnPremise}"
+                       Margin="0,0,20,0"
+                       Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+          <RadioButton Content="Dataverse (Office 365)" 
+                       IsChecked="{Binding IsDataverse}"
+                       Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        </StackPanel>
+        
+        <!-- Server -->
+        <TextBlock Grid.Row="4" Text="服务器 (Server):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        <TextBox Grid.Row="5" 
+                 Text="{Binding Environment.Server, UpdateSourceTrigger=PropertyChanged}"
+                 Height="26" Margin="0,0,0,12"
+                 Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                 Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                 BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+        
+        <!-- Port and SSL -->
+        <Grid Grid.Row="6" Margin="0,0,0,12">
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="Auto"/>
+          </Grid.ColumnDefinitions>
+          
+          <StackPanel Grid.Column="0">
+            <TextBlock Text="端口 (Port):" Margin="0,0,0,5"
+                       Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+            <TextBox Text="{Binding Environment.Port, UpdateSourceTrigger=PropertyChanged}"
+                     Height="26"
+                     Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                     Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                     BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+          </StackPanel>
+          
+          <CheckBox Grid.Column="2" 
+                    Content="使用 SSL (Use SSL)"
+                    IsChecked="{Binding Environment.UseSSL}"
+                    VerticalAlignment="Bottom"
+                    Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        </Grid>
+        
+        <!-- Organization Name -->
+        <TextBlock Grid.Row="7" Text="组织名称 (Organization Name):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        <TextBox Grid.Row="8" 
+                 Text="{Binding Environment.OrganizationName, UpdateSourceTrigger=PropertyChanged}"
+                 Height="26" Margin="0,0,0,12"
+                 Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                 Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                 BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+        
+        <!-- Authentication Source -->
+        <TextBlock Grid.Row="9" Text="认证源 (Authentication Source):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        <ComboBox Grid.Row="10"
+                  SelectedItem="{Binding Environment.AuthMethod}"
+                  ItemsSource="{Binding AuthMethods}"
+                  Height="26" Margin="0,0,0,12"
+                  Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                  Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                  BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+        
+        <!-- Sign in as current user -->
+        <CheckBox Grid.Row="11" 
+                  Content="以当前用户身份登录 (Sign in as current user)"
+                  IsChecked="{Binding Environment.SignInAsCurrentUser}"
+                  Margin="0,0,0,12"
+                  Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
+        
+        <!-- Username -->
+        <TextBlock Grid.Row="12" Text="用户名 (User Name):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                   Visibility="{Binding ShowCredentialFields, Converter={x:Static vs:Converters.BoolToVisibilityConverter}}"/>
+        <TextBox Grid.Row="13" 
+                 Text="{Binding Environment.Username, UpdateSourceTrigger=PropertyChanged}"
+                 Height="26" Margin="0,0,0,12"
+                 Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                 Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                 BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
+                 Visibility="{Binding ShowCredentialFields, Converter={x:Static vs:Converters.BoolToVisibilityConverter}}"/>
+        
+        <!-- Password -->
+        <TextBlock Grid.Row="14" Text="密码 (Password):" Margin="0,0,0,5"
+                   Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                   Visibility="{Binding ShowCredentialFields, Converter={x:Static vs:Converters.BoolToVisibilityConverter}}"/>
+        <PasswordBox Grid.Row="15" 
+                     Height="26" Margin="0,0,0,12"
+                     Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+                     Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+                     BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
+                     Visibility="{Binding ShowCredentialFields, Converter={x:Static vs:Converters.BoolToVisibilityConverter}}"/>
+      </Grid>
+    </ScrollViewer>
+    
+    <!-- Dialog Buttons -->
+    <StackPanel Grid.Row="2" 
+                Orientation="Horizontal" 
+                HorizontalAlignment="Right">
+      <Button Content="{Binding SaveButtonText}"
+              Width="80"
+              Height="28"
+              Margin="0,0,8,0"
+              Command="{Binding SaveCommand}"
+              IsEnabled="{Binding CanSave}"
+              Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemAccentColorBrushKey}}"
+              Foreground="White"
+              BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemAccentColorBrushKey}}"/>
+      
+      <Button Content="取消"
+              Width="80"
+              Height="28"
+              Command="{Binding CancelCommand}"
+              Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
+              Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+              BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+    </StackPanel>
+  </Grid>
+</DataTemplate>

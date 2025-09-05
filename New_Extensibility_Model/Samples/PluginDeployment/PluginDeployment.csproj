@@ -15,5 +15,7 @@
   <ItemGroup>
     <EmbeddedResource Include="EnvironmentSelectionDialog.xaml" />
     <Page Remove="EnvironmentSelectionDialog.xaml" />
+    <EmbeddedResource Include="EnvironmentConfigurationDialog.xaml" />
+    <Page Remove="EnvironmentConfigurationDialog.xaml" />
   </ItemGroup>
 </Project>

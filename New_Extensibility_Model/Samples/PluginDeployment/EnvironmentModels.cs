@@ -19,9 +19,21 @@ using Microsoft.VisualStudio.Extensibility.UI;
 public class CrmEnvironment : INotifyPropertyChanged
 {
     private string _name = string.Empty;
-    private string _url = string.Empty;
-    private CrmEnvironmentType _type;
-    private AuthenticationMethod _authMethod;
+    private string _server = string.Empty;
+    private int _port = 443;
+    private string _organizationName = string.Empty;
+    private CrmEnvironmentType _type = CrmEnvironmentType.OnPremise;
+    private AuthenticationMethod _authMethod = AuthenticationMethod.ActiveDirectory;
+    private string _domain = string.Empty;
+    private string _username = string.Empty;
+    private string _password = string.Empty;
+    private bool _useSSL = true;
+    private bool _signInAsCurrentUser = false;
+    private bool _displayOrganizationList = false;
+    private string _clientId = string.Empty;
+    private string _clientSecret = string.Empty;
+    private string _appId = string.Empty;
+    private GrantType _grantType = GrantType.Password;
 
     /// <summary>
     /// 环境名称 (Environment Name)
@@ -40,17 +52,51 @@ public class CrmEnvironment : INotifyPropertyChanged
     }
 
     /// <summary>
-    /// 环境 URL (Environment URL)
+    /// 服务器地址 (Server Address)
     /// </summary>
-    public string Url
+    public string Server
     {
-        get => _url;
+        get => _server;
         set
         {
-            if (_url != value)
+            if (_server != value)
             {
-                _url = value;
+                _server = value;
+                OnPropertyChanged(nameof(Server));
                 OnPropertyChanged(nameof(Url));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 端口 (Port)
+    /// </summary>
+    public int Port
+    {
+        get => _port;
+        set
+        {
+            if (_port != value)
+            {
+                _port = value;
+                OnPropertyChanged(nameof(Port));
+                OnPropertyChanged(nameof(Url));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 组织名称 (Organization Name)
+    /// </summary>
+    public string OrganizationName
+    {
+        get => _organizationName;
+        set
+        {
+            if (_organizationName != value)
+            {
+                _organizationName = value;
+                OnPropertyChanged(nameof(OrganizationName));
             }
         }
     }
@@ -68,6 +114,7 @@ public class CrmEnvironment : INotifyPropertyChanged
                 _type = value;
                 OnPropertyChanged(nameof(Type));
                 OnPropertyChanged(nameof(TypeDisplay));
+                OnPropertyChanged(nameof(Url));
             }
         }
     }
@@ -84,6 +131,194 @@ public class CrmEnvironment : INotifyPropertyChanged
             {
                 _authMethod = value;
                 OnPropertyChanged(nameof(AuthMethod));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 域 (Domain)
+    /// </summary>
+    public string Domain
+    {
+        get => _domain;
+        set
+        {
+            if (_domain != value)
+            {
+                _domain = value;
+                OnPropertyChanged(nameof(Domain));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 用户名 (Username)
+    /// </summary>
+    public string Username
+    {
+        get => _username;
+        set
+        {
+            if (_username != value)
+            {
+                _username = value;
+                OnPropertyChanged(nameof(Username));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 密码 (Password)
+    /// </summary>
+    public string Password
+    {
+        get => _password;
+        set
+        {
+            if (_password != value)
+            {
+                _password = value;
+                OnPropertyChanged(nameof(Password));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 使用 SSL (Use SSL)
+    /// </summary>
+    public bool UseSSL
+    {
+        get => _useSSL;
+        set
+        {
+            if (_useSSL != value)
+            {
+                _useSSL = value;
+                OnPropertyChanged(nameof(UseSSL));
+                OnPropertyChanged(nameof(Url));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 以当前用户身份登录 (Sign in as current user)
+    /// </summary>
+    public bool SignInAsCurrentUser
+    {
+        get => _signInAsCurrentUser;
+        set
+        {
+            if (_signInAsCurrentUser != value)
+            {
+                _signInAsCurrentUser = value;
+                OnPropertyChanged(nameof(SignInAsCurrentUser));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 显示可用组织列表 (Display list of available organizations)
+    /// </summary>
+    public bool DisplayOrganizationList
+    {
+        get => _displayOrganizationList;
+        set
+        {
+            if (_displayOrganizationList != value)
+            {
+                _displayOrganizationList = value;
+                OnPropertyChanged(nameof(DisplayOrganizationList));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 客户端 ID (Client ID)
+    /// </summary>
+    public string ClientId
+    {
+        get => _clientId;
+        set
+        {
+            if (_clientId != value)
+            {
+                _clientId = value;
+                OnPropertyChanged(nameof(ClientId));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 客户端密钥 (Client Secret)
+    /// </summary>
+    public string ClientSecret
+    {
+        get => _clientSecret;
+        set
+        {
+            if (_clientSecret != value)
+            {
+                _clientSecret = value;
+                OnPropertyChanged(nameof(ClientSecret));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 应用程序 ID (Application ID)
+    /// </summary>
+    public string AppId
+    {
+        get => _appId;
+        set
+        {
+            if (_appId != value)
+            {
+                _appId = value;
+                OnPropertyChanged(nameof(AppId));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 授权类型 (Grant Type)
+    /// </summary>
+    public GrantType GrantType
+    {
+        get => _grantType;
+        set
+        {
+            if (_grantType != value)
+            {
+                _grantType = value;
+                OnPropertyChanged(nameof(GrantType));
+            }
+        }
+    }
+
+    /// <summary>
+    /// 环境 URL (Environment URL) - 根据配置动态生成
+    /// </summary>
+    public string Url
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(Server))
+                return string.Empty;
+
+            var protocol = UseSSL ? "https" : "http";
+            var defaultPort = UseSSL ? 443 : 80;
+            
+            if (Type == CrmEnvironmentType.Dataverse)
+            {
+                // For Dataverse, typically the server is the full URL
+                return Server.StartsWith("http") ? Server : $"https://{Server}";
+            }
+            else
+            {
+                // For On-Premise, construct the URL
+                var portPart = Port != defaultPort ? $":{Port}" : string.Empty;
+                return $"{protocol}://{Server}{portPart}";
             }
         }
     }
@@ -109,49 +344,25 @@ public class EnvironmentSelectionViewModel : INotifyPropertyChanged
 {
     private CrmEnvironment? _selectedEnvironment;
     private readonly TaskCompletionSource<CrmEnvironment?> _dialogResult;
+    private readonly EnvironmentStorageService _storageService;
 
     public EnvironmentSelectionViewModel()
     {
         _dialogResult = new TaskCompletionSource<CrmEnvironment?>();
+        _storageService = new EnvironmentStorageService();
         
-        // 初始化示例环境数据
-        // Initialize sample environment data
-        Environments = new ObservableCollection<CrmEnvironment>
-        {
-            new CrmEnvironment
-            {
-                Name = "XCMG-DEV-YW",
-                Url = "https://xcmg-dev-yw.crm.dynamics.com",
-                Type = CrmEnvironmentType.Dataverse,
-                AuthMethod = AuthenticationMethod.OAuth
-            },
-            new CrmEnvironment
-            {
-                Name = "XCMG-TEST",
-                Url = "https://xcmg-test.crm.dynamics.com",
-                Type = CrmEnvironmentType.Dataverse,
-                AuthMethod = AuthenticationMethod.OAuth
-            },
-            new CrmEnvironment
-            {
-                Name = "本地开发环境",
-                Url = "http://localhost:5555",
-                Type = CrmEnvironmentType.OnPremise,
-                AuthMethod = AuthenticationMethod.ActiveDirectory
-            }
-        };
-
-        // 默认选择第一个环境
-        // Select first environment by default
-        SelectedEnvironment = Environments.FirstOrDefault();
-
+        // 初始化环境列表
+        Environments = new ObservableCollection<CrmEnvironment>();
+        
         // 初始化命令
-        // Initialize commands
         AddEnvironmentCommand = new AsyncRelayCommand(AddEnvironmentAsync);
         EditEnvironmentCommand = new AsyncRelayCommand(EditEnvironmentAsync, () => HasSelectedEnvironment);
         DeleteEnvironmentCommand = new AsyncRelayCommand(DeleteEnvironmentAsync, () => HasSelectedEnvironment);
         ConfirmCommand = new RelayCommand(Confirm, () => HasSelectedEnvironment);
         CancelCommand = new RelayCommand(Cancel);
+
+        // 异步加载环境数据
+        _ = LoadEnvironmentsAsync();
     }
 
     /// <summary>
@@ -199,53 +410,123 @@ public class EnvironmentSelectionViewModel : INotifyPropertyChanged
     public ICommand ConfirmCommand { get; }
     public ICommand CancelCommand { get; }
 
+    /// <summary>
+    /// 加载环境数据
+    /// Load environment data
+    /// </summary>
+    private async Task LoadEnvironmentsAsync()
+    {
+        try
+        {
+            var environments = await _storageService.LoadEnvironmentsAsync();
+            
+            Environments.Clear();
+            foreach (var environment in environments)
+            {
+                Environments.Add(environment);
+            }
+
+            // 默认选择第一个环境
+            SelectedEnvironment = Environments.FirstOrDefault();
+        }
+        catch (Exception)
+        {
+            // 加载失败时可以显示错误消息或使用默认数据
+            // Could show error message or use default data when loading fails
+        }
+    }
+
     private async Task AddEnvironmentAsync()
     {
-        // TODO: 实现添加环境对话框
-        // TODO: Implement add environment dialog
-        var newEnvironment = new CrmEnvironment
+        try
         {
-            Name = $"新环境 {Environments.Count + 1}",
-            Url = "https://example.crm.dynamics.com",
-            Type = CrmEnvironmentType.Dataverse,
-            AuthMethod = AuthenticationMethod.OAuth
-        };
-
-        Environments.Add(newEnvironment);
-        SelectedEnvironment = newEnvironment;
+            // 创建环境配置对话框
+            var configDialog = new EnvironmentConfigurationDialog();
+            var result = await configDialog.GetResultAsync();
+            
+            if (result != null)
+            {
+                // 保存到存储
+                await _storageService.AddEnvironmentAsync(result);
+                
+                // 添加到列表并选中
+                Environments.Add(result);
+                SelectedEnvironment = result;
+            }
+        }
+        catch (Exception ex)
+        {
+            // TODO: 显示错误消息
+            // TODO: Show error message
+            System.Diagnostics.Debug.WriteLine($"Failed to add environment: {ex.Message}");
+        }
     }
 
     private async Task EditEnvironmentAsync()
     {
         if (SelectedEnvironment == null) return;
 
-        // TODO: 实现编辑环境对话框
-        // TODO: Implement edit environment dialog
-        
-        // 临时实现：修改名称
-        // Temporary implementation: modify name
-        SelectedEnvironment.Name += " (已编辑)";
+        try
+        {
+            var originalName = SelectedEnvironment.Name;
+            
+            // 创建环境配置对话框，传入当前环境进行编辑
+            var configDialog = new EnvironmentConfigurationDialog(SelectedEnvironment);
+            var result = await configDialog.GetResultAsync();
+            
+            if (result != null)
+            {
+                // 更新存储
+                await _storageService.UpdateEnvironmentAsync(originalName, result);
+                
+                // 更新列表中的环境
+                var index = Environments.IndexOf(SelectedEnvironment);
+                if (index >= 0)
+                {
+                    Environments[index] = result;
+                    SelectedEnvironment = result;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // TODO: 显示错误消息
+            // TODO: Show error message
+            System.Diagnostics.Debug.WriteLine($"Failed to edit environment: {ex.Message}");
+        }
     }
 
     private async Task DeleteEnvironmentAsync()
     {
         if (SelectedEnvironment == null) return;
 
-        var environmentToDelete = SelectedEnvironment;
-        var index = Environments.IndexOf(environmentToDelete);
-        
-        Environments.Remove(environmentToDelete);
-        
-        // 选择下一个环境
-        // Select next environment
-        if (Environments.Count > 0)
+        try
         {
-            var newIndex = Math.Min(index, Environments.Count - 1);
-            SelectedEnvironment = Environments[newIndex];
+            var environmentToDelete = SelectedEnvironment;
+            var index = Environments.IndexOf(environmentToDelete);
+            
+            // 从存储中删除
+            await _storageService.DeleteEnvironmentAsync(environmentToDelete.Name);
+            
+            // 从列表中移除
+            Environments.Remove(environmentToDelete);
+            
+            // 选择下一个环境
+            if (Environments.Count > 0)
+            {
+                var newIndex = Math.Min(index, Environments.Count - 1);
+                SelectedEnvironment = Environments[newIndex];
+            }
+            else
+            {
+                SelectedEnvironment = null;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            SelectedEnvironment = null;
+            // TODO: 显示错误消息
+            // TODO: Show error message
+            System.Diagnostics.Debug.WriteLine($"Failed to delete environment: {ex.Message}");
         }
     }
 
@@ -348,4 +629,70 @@ public class RelayCommand : ICommand
     {
         CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
+}
+
+/// <summary>
+/// CRM 环境类型枚举
+/// CRM Environment Type Enumeration
+/// </summary>
+public enum CrmEnvironmentType
+{
+    /// <summary>
+    /// 本地部署 (On-Premise)
+    /// </summary>
+    OnPremise,
+
+    /// <summary>
+    /// Dataverse (云服务)
+    /// </summary>
+    Dataverse
+}
+
+/// <summary>
+/// 认证方式枚举
+/// Authentication Method Enumeration
+/// </summary>
+public enum AuthenticationMethod
+{
+    /// <summary>
+    /// Active Directory 认证
+    /// </summary>
+    ActiveDirectory,
+
+    /// <summary>
+    /// OAuth 认证
+    /// </summary>
+    OAuth,
+
+    /// <summary>
+    /// 密码认证
+    /// </summary>
+    Password,
+
+    /// <summary>
+    /// 客户端凭据
+    /// </summary>
+    ClientCredentials
+}
+
+/// <summary>
+/// OAuth 授权类型枚举
+/// OAuth Grant Type Enumeration
+/// </summary>
+public enum GrantType
+{
+    /// <summary>
+    /// 密码授权
+    /// </summary>
+    Password,
+
+    /// <summary>
+    /// 客户端凭据授权
+    /// </summary>
+    ClientCredentials,
+
+    /// <summary>
+    /// 授权码授权
+    /// </summary>
+    AuthorizationCode
 }
