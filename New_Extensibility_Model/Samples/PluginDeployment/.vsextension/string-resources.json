@@ -12,7 +12,33 @@
   
   // 2. ProgressMessage: 用户点击命令后显示的进度消息
   //    ProgressMessage: Progress message displayed after user clicks the command  
-  "PluginDeployment.PluginDeployCommand.ProgressMessage": "插件发布中"
+  "PluginDeployment.PluginDeployCommand.ProgressMessage": "插件发布中",
+
+  // 3. 环境选择对话框相关文本 (Environment Selection Dialog Related Text)
+  "PluginDeployment.EnvironmentSelection.Title": "Dynamics CRM 插件发布工具",
+  "PluginDeployment.EnvironmentSelection.Prompt": "请选择目标环境类型：",
+  "PluginDeployment.EnvironmentSelection.OnPremise": "On-Premise (本地部署)",
+  "PluginDeployment.EnvironmentSelection.Dataverse": "Dataverse (云端环境)",
+
+  // 4. 认证方式选择相关文本 (Authentication Method Selection Related Text)
+  "PluginDeployment.Authentication.OnPremisePrompt": "请选择 On-Premise 环境的认证方式：",
+  "PluginDeployment.Authentication.DataversePrompt": "请选择 Dataverse 环境的认证方式：",
+  "PluginDeployment.Authentication.OAuth": "OAuth",
+  "PluginDeployment.Authentication.ConnectionString": "连接字符串",
+  "PluginDeployment.Authentication.ActiveDirectory": "Active Directory",
+  "PluginDeployment.Authentication.IFD": "IFD (Internet Facing Deployment)",
+
+  // 5. 连接详细信息相关文本 (Connection Details Related Text)
+  "PluginDeployment.Connection.StringPrompt": "请输入连接字符串：",
+  "PluginDeployment.Connection.DataverseUrlPrompt": "请输入 Dataverse 环境 URL（例如：https://yourorg.crm.dynamics.com）：",
+  "PluginDeployment.Connection.EmptyError": "连接信息不能为空，发布过程已取消。",
+
+  // 6. 确认和结果消息 (Confirmation and Result Messages)
+  "PluginDeployment.Confirm.ConfigurationTitle": "确认发布配置",
+  "PluginDeployment.Confirm.Prompt": "确定要继续发布插件吗？",
+  "PluginDeployment.Result.Canceled": "插件发布已取消。",
+  "PluginDeployment.Result.Success": "发布完成！插件已成功部署。",
+  "PluginDeployment.Result.Error": "发布过程中发生错误："
   
   // 注意事项 (Notes):
   // - 键名必须与代码中使用的字符串引用完全匹配
@@ -21,11 +47,4 @@
   //   Use %key% syntax to reference these strings in code
   // - 支持添加更多语言版本的资源文件
   //   Support for adding resource files for more language versions
-  //
-  // 扩展示例 (Extension Examples):
-  // 如果需要添加更多文本，可以按以下格式添加：
-  // If you need to add more text, you can add it in the following format:
-  // "PluginDeployment.Command.SuccessMessage": "插件发布成功！",
-  // "PluginDeployment.Command.ErrorMessage": "插件发布失败，请重试。",
-  // "PluginDeployment.Command.ConfirmMessage": "确定要发布此插件吗？"
 }

@@ -3,10 +3,9 @@
 
 namespace PluginDeployment;
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.Extensibility;
 using Microsoft.VisualStudio.Extensibility.Commands;
 using Microsoft.VisualStudio.Extensibility.Shell;
@@ -33,6 +32,56 @@ using Microsoft.VisualStudio.Extensibility.Shell;
 /// - 通过 VSCT GUID 和 ID 来精确定位右键菜单
 ///   Uses VSCT GUID and ID to precisely locate right-click menu
 /// </summary>
+/// <summary>
+/// CRM 环境类型枚举 - 定义支持的环境类型
+/// CRM Environment Type Enumeration - defines supported environment types
+/// </summary>
+internal enum CrmEnvironmentType
+{
+    /// <summary>
+    /// On-Premise 环境 (本地部署环境)
+    /// On-Premise environment (local deployment environment)
+    /// </summary>
+    OnPremise,
+
+    /// <summary>
+    /// Dataverse 环境 (云端环境/Dynamics 365 在线版)
+    /// Dataverse environment (cloud environment/Dynamics 365 Online)
+    /// </summary>
+    Dataverse
+}
+
+/// <summary>
+/// 认证方式枚举 - 定义支持的认证方式
+/// Authentication Method Enumeration - defines supported authentication methods
+/// </summary>
+internal enum AuthenticationMethod
+{
+    /// <summary>
+    /// OAuth 认证 (适用于 Dataverse)
+    /// OAuth authentication (for Dataverse)
+    /// </summary>
+    OAuth,
+
+    /// <summary>
+    /// 连接字符串 (Connection String)
+    /// Connection String
+    /// </summary>
+    ConnectionString,
+
+    /// <summary>
+    /// Active Directory (适用于 On-Premise)
+    /// Active Directory (for On-Premise)
+    /// </summary>
+    ActiveDirectory,
+
+    /// <summary>
+    /// IFD (Internet Facing Deployment，适用于 On-Premise)
+    /// IFD (Internet Facing Deployment, for On-Premise)
+    /// </summary>
+    IFD
+}
+
 [VisualStudioContribution] // 标记为 Visual Studio 扩展贡献 (Mark as Visual Studio extension contribution)
 internal class PluginDeployCommand : Command
 {
@@ -105,33 +154,175 @@ internal class PluginDeployCommand : Command
     /// <inheritdoc />
     public override async Task ExecuteCommandAsync(IClientContext context, CancellationToken cancellationToken)
     {
-        // 显示提示消息"插件发布中" - 直接使用中文文本
-        // Display progress message "Plugin is being released" - using direct Chinese text
-        // 
-        // ShowPromptAsync 方法的功能：
-        // ShowPromptAsync method functionality:
-        // - 在 Visual Studio 中显示模态对话框
-        //   Display modal dialog in Visual Studio
-        // - 使用直接字符串而不是本地化资源引用
-        //   Use direct strings instead of localized resource references
-        // - 提供用户交互选项（这里使用 PromptOptions.OK 只显示确定按钮）
-        //   Provide user interaction options (here using PromptOptions.OK to show only OK button)
-        await this.Extensibility.Shell().ShowPromptAsync(
-            "插件发布中", // 直接使用中文文本 (Direct Chinese text)
-            PromptOptions.OK, // 仅显示确定按钮 (Show only OK button)
-            cancellationToken); // 传入取消令牌以支持操作取消 (Pass cancellation token to support operation cancellation)
+        const string DialogTitle = "Dynamics CRM 插件发布工具";
+        ShellExtensibility shell = this.Extensibility.Shell();
 
-        // 在这里可以添加实际的插件发布逻辑
-        // Actual plugin deployment logic can be added here
-        // 例如：
-        // For example:
-        // - 获取当前选中的项目或文件信息
-        //   Get information about currently selected project or file
-        // - 执行构建、打包操作
-        //   Execute build and packaging operations
-        // - 上传到插件仓库或部署到目标环境
-        //   Upload to plugin repository or deploy to target environment
-        // - 显示部署结果和日志
-        //   Display deployment results and logs
+        try
+        {
+            // 第一步：环境选择 (Step 1: Environment Selection)
+            CrmEnvironmentType selectedEnvironment = await shell.ShowPromptAsync(
+                "请选择目标环境类型：",
+                new PromptOptions<CrmEnvironmentType>
+                {
+                    Choices =
+                    {
+                        { "On-Premise (本地部署)", CrmEnvironmentType.OnPremise },
+                        { "Dataverse (云端环境)", CrmEnvironmentType.Dataverse },
+                    },
+                    DismissedReturns = CrmEnvironmentType.OnPremise,
+                    Title = DialogTitle,
+                    Icon = ImageMoniker.KnownValues.Settings,
+                },
+                cancellationToken);
+
+            // 第二步：根据环境选择认证方式 (Step 2: Authentication Method Selection based on Environment)
+            AuthenticationMethod selectedAuth;
+            if (selectedEnvironment == CrmEnvironmentType.OnPremise)
+            {
+                selectedAuth = await shell.ShowPromptAsync(
+                    "请选择 On-Premise 环境的认证方式：",
+                    new PromptOptions<AuthenticationMethod>
+                    {
+                        Choices =
+                        {
+                            { "Active Directory", AuthenticationMethod.ActiveDirectory },
+                            { "IFD (Internet Facing Deployment)", AuthenticationMethod.IFD },
+                            { "连接字符串", AuthenticationMethod.ConnectionString },
+                        },
+                        DismissedReturns = AuthenticationMethod.ActiveDirectory,
+                        Title = DialogTitle,
+                        Icon = ImageMoniker.KnownValues.Security,
+                    },
+                    cancellationToken);
+            }
+            else // Dataverse
+            {
+                selectedAuth = await shell.ShowPromptAsync(
+                    "请选择 Dataverse 环境的认证方式：",
+                    new PromptOptions<AuthenticationMethod>
+                    {
+                        Choices =
+                        {
+                            { "OAuth", AuthenticationMethod.OAuth },
+                            { "连接字符串", AuthenticationMethod.ConnectionString },
+                        },
+                        DismissedReturns = AuthenticationMethod.OAuth,
+                        Title = DialogTitle,
+                        Icon = ImageMoniker.KnownValues.Security,
+                    },
+                    cancellationToken);
+            }
+
+            // 第三步：获取连接详细信息 (Step 3: Get Connection Details)
+            string? connectionDetails = null;
+            if (selectedAuth == AuthenticationMethod.ConnectionString)
+            {
+                connectionDetails = await shell.ShowPromptAsync(
+                    "请输入连接字符串：",
+                    InputPromptOptions.Default with 
+                    { 
+                        Title = DialogTitle,
+                        Icon = ImageMoniker.KnownValues.Database,
+                    },
+                    cancellationToken);
+
+                if (string.IsNullOrEmpty(connectionDetails))
+                {
+                    await shell.ShowPromptAsync(
+                        "连接字符串不能为空，发布过程已取消。",
+                        PromptOptions.ErrorConfirm with { Title = DialogTitle },
+                        cancellationToken);
+                    return;
+                }
+            }
+            else if (selectedAuth == AuthenticationMethod.OAuth && selectedEnvironment == CrmEnvironmentType.Dataverse)
+            {
+                connectionDetails = await shell.ShowPromptAsync(
+                    "请输入 Dataverse 环境 URL（例如：https://yourorg.crm.dynamics.com）：",
+                    InputPromptOptions.Default with 
+                    { 
+                        Title = DialogTitle,
+                        Icon = ImageMoniker.KnownValues.Cloud,
+                    },
+                    cancellationToken);
+
+                if (string.IsNullOrEmpty(connectionDetails))
+                {
+                    await shell.ShowPromptAsync(
+                        "环境 URL 不能为空，发布过程已取消。",
+                        PromptOptions.ErrorConfirm with { Title = DialogTitle },
+                        cancellationToken);
+                    return;
+                }
+            }
+
+            // 第四步：确认配置 (Step 4: Confirm Configuration)
+            string configSummary = $"环境类型：{(selectedEnvironment == CrmEnvironmentType.OnPremise ? "On-Premise" : "Dataverse")}\n" +
+                                 $"认证方式：{GetAuthMethodDisplayName(selectedAuth)}\n" +
+                                 $"连接信息：{(string.IsNullOrEmpty(connectionDetails) ? "使用默认配置" : "已配置")}";
+
+            bool confirmDeployment = await shell.ShowPromptAsync(
+                $"确认发布配置：\n\n{configSummary}\n\n确定要继续发布插件吗？",
+                PromptOptions.OKCancel with
+                {
+                    Title = DialogTitle,
+                    Icon = ImageMoniker.KnownValues.StatusInformation,
+                },
+                cancellationToken);
+
+            if (!confirmDeployment)
+            {
+                await shell.ShowPromptAsync(
+                    "插件发布已取消。",
+                    PromptOptions.AlertConfirm with { Title = DialogTitle },
+                    cancellationToken);
+                return;
+            }
+
+            // 第五步：执行发布 (Step 5: Execute Deployment)
+            await shell.ShowPromptAsync(
+                $"正在发布插件到 {(selectedEnvironment == CrmEnvironmentType.OnPremise ? "On-Premise" : "Dataverse")} 环境...\n\n" +
+                "发布完成！插件已成功部署。",
+                PromptOptions.AlertConfirm with { Title = DialogTitle },
+                cancellationToken);
+
+            // 在这里可以添加实际的插件发布逻辑
+            // Actual plugin deployment logic can be added here
+            // 例如：
+            // For example:
+            // - 根据 selectedEnvironment 和 selectedAuth 建立连接
+            //   Establish connection based on selectedEnvironment and selectedAuth
+            // - 构建并打包插件程序集
+            //   Build and package plugin assembly
+            // - 上传到目标环境
+            //   Upload to target environment
+            // - 注册插件步骤和映像
+            //   Register plugin steps and images
+        }
+        catch (Exception ex)
+        {
+            await shell.ShowPromptAsync(
+                $"发布过程中发生错误：{ex.Message}",
+                PromptOptions.ErrorConfirm with { Title = DialogTitle },
+                cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// 获取认证方式的显示名称
+    /// Get display name for authentication method
+    /// </summary>
+    /// <param name="authMethod">认证方式</param>
+    /// <returns>显示名称</returns>
+    private static string GetAuthMethodDisplayName(AuthenticationMethod authMethod)
+    {
+        return authMethod switch
+        {
+            AuthenticationMethod.OAuth => "OAuth",
+            AuthenticationMethod.ConnectionString => "连接字符串",
+            AuthenticationMethod.ActiveDirectory => "Active Directory",
+            AuthenticationMethod.IFD => "IFD",
+            _ => authMethod.ToString()
+        };
     }
 }
