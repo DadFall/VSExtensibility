@@ -13,27 +13,13 @@ using Microsoft.VisualStudio.Extensibility.UI;
 /// </summary>
 internal class EnvironmentSelectionDialog : RemoteUserControl
 {
-    private readonly SimpleEnvironmentSelectionViewModel _viewModel;
-
     /// <summary>
     /// 初始化环境选择对话框的新实例
     /// Initializes a new instance of the Environment Selection Dialog
     /// </summary>
     public EnvironmentSelectionDialog()
-        : this(new SimpleEnvironmentSelectionViewModel())
+        : base(new SimpleDialogData())
     {
-    }
-
-    /// <summary>
-    /// 初始化环境选择对话框的新实例，使用指定的视图模型
-    /// Initializes a new instance of the Environment Selection Dialog with specified view model
-    /// </summary>
-    /// <param name="viewModel">视图模型 (View Model)</param>
-    /// <param name="synchronizationContext">同步上下文 (Synchronization Context)</param>
-    public EnvironmentSelectionDialog(SimpleEnvironmentSelectionViewModel viewModel, SynchronizationContext? synchronizationContext = null)
-        : base(viewModel, synchronizationContext)
-    {
-        _viewModel = viewModel;
     }
 
     /// <summary>
@@ -43,12 +29,32 @@ internal class EnvironmentSelectionDialog : RemoteUserControl
     /// <returns>选中的环境，如果取消则返回 null (Selected environment, or null if cancelled)</returns>
     public Task<CrmEnvironment?> GetResultAsync()
     {
-        return _viewModel.DialogResultTask;
+        // 暂时返回一个示例环境
+        // Temporarily return a sample environment
+        var sampleEnvironment = new CrmEnvironment 
+        { 
+            Name = "XCMG-DEV-YW", 
+            Type = CrmEnvironmentType.Dataverse,
+            Server = "xcmgdev.crm.dynamics.com",
+            Port = 443,
+            UseSSL = true
+        };
+        
+        return Task.FromResult<CrmEnvironment?>(sampleEnvironment);
     }
+}
 
-    /// <summary>
-    /// 获取视图模型
-    /// Get view model
-    /// </summary>
-    public SimpleEnvironmentSelectionViewModel ViewModel => _viewModel;
+/// <summary>
+/// 简单的对话框数据类（模仿 ModalDialogData 的模式）
+/// Simple dialog data class (mimicking ModalDialogData pattern)
+/// </summary>
+public class SimpleDialogData
+{
+    public string Title { get; } = "选择部署环境";
+    public string[] EnvironmentOptions { get; } = 
+    {
+        "XCMG-DEV-YW (Dataverse)",
+        "XCMG-TEST (Dataverse)", 
+        "本地开发环境 (On-Premise)"
+    };
 }
