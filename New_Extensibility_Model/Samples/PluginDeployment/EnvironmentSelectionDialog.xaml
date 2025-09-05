@@ -3,12 +3,11 @@
               xmlns:vs="http://schemas.microsoft.com/visualstudio/extensibility/2022/xaml"
               xmlns:styles="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0"
               xmlns:colors="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.15.0">
-    <Grid Width="450" Height="320" Margin="16">
+    <Grid Width="400" Height="250" Margin="16">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="*"/>
-      <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
     
@@ -22,100 +21,25 @@
     
     <!-- Environment Selection Label -->
     <TextBlock Grid.Row="1" 
-               Text="请选择:" 
+               Text="请选择环境:" 
                Margin="0,0,0,8"
                Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"/>
     
-    <!-- Environment Selection and Management -->
-    <Grid Grid.Row="2" Margin="0,0,0,16">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto"/>
-        <RowDefinition Height="*"/>
-        <RowDefinition Height="Auto"/>
-      </Grid.RowDefinitions>
-      
-      <!-- Environment Dropdown -->
-      <ComboBox Grid.Row="0"
-                x:Name="EnvironmentComboBox"
-                Height="28"
-                Margin="0,0,0,12"
-                ItemsSource="{Binding Environments}"
-                SelectedItem="{Binding SelectedEnvironment}"
-                DisplayMemberPath="Name"
-                Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
-                Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
-                BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
-      
-      <!-- Environment List -->
-      <ListBox Grid.Row="1"
-               x:Name="EnvironmentListBox"
-               ItemsSource="{Binding Environments}"
-               SelectedItem="{Binding SelectedEnvironment}"
-               Height="120"
-               Margin="0,0,0,12"
-               Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
-               Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
-               BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}">
-        <ListBox.ItemTemplate>
-          <DataTemplate>
-            <Grid>
-              <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-              </Grid.ColumnDefinitions>
-              <StackPanel Grid.Column="0">
-                <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                <TextBlock Text="{Binding Url}" FontSize="11" Opacity="0.7"/>
-                <TextBlock Text="{Binding TypeDisplay}" FontSize="11" Opacity="0.7"/>
-              </StackPanel>
-            </Grid>
-          </DataTemplate>
-        </ListBox.ItemTemplate>
-      </ListBox>
-      
-      <!-- Management Buttons -->
-      <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left">
-        <Button x:Name="AddButton"
-                Content="新增"
-                Width="60"
-                Height="28"
-                Margin="0,0,8,0"
-                Command="{Binding AddEnvironmentCommand}"
-                Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
-                Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
-                BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
-        
-        <Button x:Name="EditButton"
-                Content="编辑"
-                Width="60"
-                Height="28"
-                Margin="0,0,8,0"
-                Command="{Binding EditEnvironmentCommand}"
-                IsEnabled="{Binding HasSelectedEnvironment}"
-                Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
-                Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
-                BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
-        
-        <Button x:Name="DeleteButton"
-                Content="删除"
-                Width="60"
-                Height="28"
-                Command="{Binding DeleteEnvironmentCommand}"
-                IsEnabled="{Binding HasSelectedEnvironment}"
-                Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
-                Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
-                BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
-      </StackPanel>
-    </Grid>
-    
-    <!-- Separator -->
-    <Border Grid.Row="3" 
-            Height="1" 
-            Margin="0,8,0,16"
-            Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>
+    <!-- Environment Selection -->
+    <ComboBox Grid.Row="2"
+              x:Name="EnvironmentComboBox"
+              Height="28"
+              Margin="0,0,0,16"
+              Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowBrushKey}}"
+              Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
+              BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}">
+      <ComboBoxItem>XCMG-DEV-YW (Dataverse)</ComboBoxItem>
+      <ComboBoxItem>XCMG-TEST (Dataverse)</ComboBoxItem>
+      <ComboBoxItem>本地开发环境 (On-Premise)</ComboBoxItem>
+    </ComboBox>
     
     <!-- Dialog Buttons -->
-    <StackPanel Grid.Row="4" 
+    <StackPanel Grid.Row="3" 
                 Orientation="Horizontal" 
                 HorizontalAlignment="Right">
       <Button x:Name="ConfirmButton"
@@ -123,8 +47,6 @@
               Width="80"
               Height="28"
               Margin="0,0,8,0"
-              Command="{Binding ConfirmCommand}"
-              IsEnabled="{Binding HasSelectedEnvironment}"
               Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemAccentColorBrushKey}}"
               Foreground="White"
               BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemAccentColorBrushKey}}"/>
@@ -133,7 +55,6 @@
               Content="取消"
               Width="80"
               Height="28"
-              Command="{Binding CancelCommand}"
               Background="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"
               Foreground="{DynamicResource {x:Static colors:EnvironmentColors.SystemWindowTextBrushKey}}"
               BorderBrush="{DynamicResource {x:Static colors:EnvironmentColors.SystemControlBackgroundChromeMediumBrushKey}}"/>

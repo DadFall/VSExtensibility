@@ -706,3 +706,82 @@ public enum GrantType
     /// </summary>
     AuthorizationCode
 }
+
+/// <summary>
+/// 简化的环境选择对话框视图模型（用于测试基本功能）
+/// Simplified Environment Selection Dialog View Model (for testing basic functionality)
+/// </summary>
+public class SimpleEnvironmentSelectionViewModel : INotifyPropertyChanged
+{
+    private readonly TaskCompletionSource<CrmEnvironment?> _dialogResult;
+
+    public SimpleEnvironmentSelectionViewModel()
+    {
+        _dialogResult = new TaskCompletionSource<CrmEnvironment?>();
+        
+        // 创建一些示例环境
+        // Create some sample environments
+        SampleEnvironments = new[]
+        {
+            new CrmEnvironment 
+            { 
+                Name = "XCMG-DEV-YW", 
+                Type = CrmEnvironmentType.Dataverse,
+                Server = "xcmgdev.crm.dynamics.com",
+                Port = 443,
+                UseSSL = true
+            },
+            new CrmEnvironment 
+            { 
+                Name = "XCMG-TEST", 
+                Type = CrmEnvironmentType.Dataverse,
+                Server = "xcmgtest.crm.dynamics.com",
+                Port = 443,
+                UseSSL = true
+            },
+            new CrmEnvironment 
+            { 
+                Name = "本地开发环境", 
+                Type = CrmEnvironmentType.OnPremise,
+                Server = "localhost",
+                Port = 80,
+                UseSSL = false
+            }
+        };
+    }
+
+    /// <summary>
+    /// 示例环境列表 (Sample Environment List)
+    /// </summary>
+    public CrmEnvironment[] SampleEnvironments { get; }
+
+    /// <summary>
+    /// 对话框结果任务 (Dialog Result Task)
+    /// </summary>
+    public Task<CrmEnvironment?> DialogResultTask => _dialogResult.Task;
+
+    /// <summary>
+    /// 确认选择（暂时返回第一个环境）
+    /// Confirm selection (temporarily return first environment)
+    /// </summary>
+    public void Confirm()
+    {
+        _dialogResult.SetResult(SampleEnvironments.FirstOrDefault());
+    }
+
+    /// <summary>
+    /// 取消选择
+    /// Cancel selection
+    /// </summary>
+    public void Cancel()
+    {
+        _dialogResult.SetResult(null);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+}

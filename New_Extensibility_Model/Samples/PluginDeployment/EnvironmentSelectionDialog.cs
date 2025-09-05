@@ -13,14 +13,14 @@ using Microsoft.VisualStudio.Extensibility.UI;
 /// </summary>
 internal class EnvironmentSelectionDialog : RemoteUserControl
 {
-    private readonly EnvironmentSelectionViewModel _viewModel;
+    private readonly SimpleEnvironmentSelectionViewModel _viewModel;
 
     /// <summary>
     /// 初始化环境选择对话框的新实例
     /// Initializes a new instance of the Environment Selection Dialog
     /// </summary>
     public EnvironmentSelectionDialog()
-        : this(new EnvironmentSelectionViewModel())
+        : this(new SimpleEnvironmentSelectionViewModel())
     {
     }
 
@@ -30,7 +30,7 @@ internal class EnvironmentSelectionDialog : RemoteUserControl
     /// </summary>
     /// <param name="viewModel">视图模型 (View Model)</param>
     /// <param name="synchronizationContext">同步上下文 (Synchronization Context)</param>
-    public EnvironmentSelectionDialog(EnvironmentSelectionViewModel viewModel, SynchronizationContext? synchronizationContext = null)
+    public EnvironmentSelectionDialog(SimpleEnvironmentSelectionViewModel viewModel, SynchronizationContext? synchronizationContext = null)
         : base(viewModel, synchronizationContext)
     {
         _viewModel = viewModel;
@@ -50,5 +50,5 @@ internal class EnvironmentSelectionDialog : RemoteUserControl
     /// 获取视图模型
     /// Get view model
     /// </summary>
-    public EnvironmentSelectionViewModel ViewModel => _viewModel;
+    public SimpleEnvironmentSelectionViewModel ViewModel => _viewModel;
 }
