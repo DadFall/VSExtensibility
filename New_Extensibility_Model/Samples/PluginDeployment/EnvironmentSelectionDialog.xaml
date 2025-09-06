@@ -4,6 +4,12 @@
               xmlns:styles="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
   <Border Padding="16" MinWidth="400" MinHeight="200">
     <Grid>
+      <Grid.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}" />
+        <Style TargetType="TextBlock">
+          <Setter Property="Foreground" Value="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}" />
+        </Style>
+      </Grid.Resources>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
@@ -16,14 +22,12 @@
                  Text="{Binding Title}" 
                  FontSize="16" 
                  FontWeight="SemiBold" 
-                 Margin="0,0,0,16"
-                 Foreground="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}"/>
+                 Margin="0,0,0,16"/>
       
       <!-- Environment Selection Label -->
       <TextBlock Grid.Row="1" 
                  Text="请选择环境:" 
-                 Margin="0,0,0,8"
-                 Foreground="{DynamicResource {x:Static styles:VsBrushes.WindowTextKey}}"/>
+                 Margin="0,0,0,8"/>
       
       <!-- Environment Selection -->
       <ComboBox Grid.Row="2"
@@ -41,14 +45,12 @@
                 Content="确认"
                 Width="80"
                 Height="28"
-                Margin="0,0,8,0"
-                Style="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}"/>
+                Margin="0,0,8,0"/>
         
         <Button x:Name="CancelButton"
                 Content="取消"
                 Width="80"
-                Height="28"
-                Style="{StaticResource {x:Static styles:VsResourceKeys.ButtonStyleKey}}"/>
+                Height="28"/>
       </StackPanel>
     </Grid>
   </Border>
