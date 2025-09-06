@@ -111,8 +111,9 @@ internal class PluginDeployCommand : Command
         try
         {
             // 显示环境选择对话框 (Show Environment Selection Dialog)
+            // Following DialogSample pattern with null data context
             #pragma warning disable CA2000 // Dispose objects before losing scope
-            var environmentDialog = new EnvironmentSelectionDialog();
+            var environmentDialog = new EnvironmentSelectionDialog(null);
             #pragma warning restore CA2000 // Dispose objects before losing scope
 
             await shell.ShowDialogAsync(environmentDialog, cancellationToken);

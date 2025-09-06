@@ -17,8 +17,15 @@ internal class EnvironmentSelectionDialog : RemoteUserControl
     /// 初始化环境选择对话框的新实例
     /// Initializes a new instance of the Environment Selection Dialog
     /// </summary>
-    public EnvironmentSelectionDialog()
-        : base(new SimpleDialogData())
+    /// <param name="dataContext">
+    /// Data context of the remote control which can be referenced from xaml through data binding.
+    /// </param>
+    /// <param name="synchronizationContext">
+    /// Optional synchronizationContext that the extender can provide to ensure that <see cref="IAsyncCommand"/>
+    /// are executed and properties are read and updated from the extension main thread.
+    /// </param>
+    public EnvironmentSelectionDialog(object? dataContext = null, SynchronizationContext? synchronizationContext = null)
+        : base(dataContext ?? new SimpleDialogData(), synchronizationContext)
     {
     }
 
